@@ -288,9 +288,3 @@ class NYUv2:
                 image = cv2.imread(image_files[count])
                 yield image, intrinsics.copy(), depth_name
                 count += 1
-
-        # for image_file in image_files[::4]:
-        #     depth_name = depth_files[count].split('/')[-1]
-        #     image = cv2.imread(image_file)
-        #     yield image, intrinsics.copy(), depth_name
-        #     count += 4

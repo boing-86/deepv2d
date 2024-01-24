@@ -290,7 +290,6 @@ class KittiRaw(object):
         # From https://github.com/mrharicot/monodepth/blob/master/utils/evaluation_utils.py
 
         drive = drive + '_sync'
-        print("@@@@@@@@@@@@@@@@@@@@@@@" + self.dataset_path + drive)
         cam_to_cam_filepath = os.path.join(self.dataset_path, drive[:10], 'calib_cam_to_cam.txt')
         imu_to_velo_filepath = os.path.join(self.dataset_path, drive[:10], 'calib_imu_to_velo.txt')
         velo_to_cam_filepath = os.path.join(self.dataset_path, drive[:10], 'calib_velo_to_cam.txt')
