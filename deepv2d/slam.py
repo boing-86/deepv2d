@@ -59,6 +59,8 @@ class DeepV2DSLAM:
         self.depths = []
         self.poses = []
 
+        self.images_files = []
+
         # tracking config parameters
         self.n_keyframes = n_keyframes # number of keyframes to use
         self.rate = rate # how often to sample new frames
@@ -435,6 +437,9 @@ class DeepV2DSLAM:
         for i, keyframe_index in enumerate(inds):
             self.depths[keyframe_index] = depths[i]
 
+            current_depth_map = depths[i]
+            cv2.imwrite(f'nyu_depth_test/{self.images_files[keyframe_index]}', 255 * vis.normalize_depth_for_display(current_depth_map))
+            
 
     def visualize_output(self, keyframe_index):
         """ Backproject a point cloud then add point cloud to visualization """
@@ -529,7 +534,7 @@ class DeepV2DSLAM:
         return pose_distance(dP)
 
 
-    def __call__(self, image, intrinsics=None):
+    def __call__(self, image, intrinsics=None, depth_map_name=None):
 
         if intrinsics is not None:
             self.intrinsics = intrinsics
@@ -540,6 +545,7 @@ class DeepV2DSLAM:
         if len(self.images) < 4: # tracking has not yet begun
             if self.index % self.rate == 0:
                 self.images.append(image)
+                self.images_files.append(depth_map_name)
                 self.depths.append(np.ones((ht, wd)))
                 self.poses.append(np.eye(4))
 
@@ -576,13 +582,14 @@ class DeepV2DSLAM:
 
             if self.index % self.rate == 0 and (dist > 0.1):
                 self.images.append(image)
+                self.images_files.append(depth_map_name)
                 self.depths.append(np.ones((ht, wd)))
                 self.poses.append(self.pose_cur)
 
                 self.update_poses(fixed=2)
                 self.update_depths()
 
-            # make a new keyfrane
+            # make a new keyframe
             if len(self.images) - self.keyframe_inds[-1] >= self.window:
                 new_keyframe_index = self.keyframe_inds[-1] + 2
                 query_pose = self.poses[new_keyframe_index]

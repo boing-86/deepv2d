@@ -36,6 +36,10 @@ def create_image_depth_figure(image, depth):
     figure = np.concatenate([image, depth_image], axis=1)
     return figure
 
+def create_depth_figure(depth):
+    depth_image = 255 * normalize_depth_for_display(depth)
+    return depth_image
+
 
 def create_camera_polydata(R, t, only_polys=False):
     """Creates a vtkPolyData object with a camera mesh: https://github.com/lmb-freiburg/demon"""

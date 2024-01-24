@@ -376,13 +376,14 @@ class DeepV2D:
 
         if self.mode == 'keyframe':
             feed_dict = {
-                self.images_placeholder: self.images,
+                self.images_placeholder: self.images, 
                 self.poses_placeholder: self.poses,
                 self.intrinsics_placeholder: self.intrinsics}
-        
+
+            # depth map 계산 및 할당
             self.depths = self.sess.run(self.outputs['depths'], feed_dict=feed_dict)
 
-        else:
+        else: # global 모드, frame 간의 관계를 고려해 depth map 업데이트
             for i in range(n):
                 inds = np.arange(n).tolist()
                 inds.remove(i)

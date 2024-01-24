@@ -275,7 +275,22 @@ class NYUv2:
     def iterate_sequence(self, seq):
         sequence_path = os.path.join(self.dataset_path, seq)
         image_files = sorted(glob.glob(os.path.join(sequence_path, 'rgb', '*.png')))
+        count = 0
+        association_file = os.path.join(sequence_path, 'associations.txt')
+        
+        with open(association_file) as f:
+            reader = csv.reader(f, delimiter=' ')
+            for row in reader:
+                if count >= len(image_files):
+                    break
+                depth_name = row[3].split('/')[-1]
+                print(depth_name)
+                image = cv2.imread(image_files[count])
+                yield image, intrinsics.copy(), depth_name
+                count += 1
 
-        for image_file in image_files[::4]:
-            image = cv2.imread(image_file)
-            yield image, intrinsics.copy()
+        # for image_file in image_files[::4]:
+        #     depth_name = depth_files[count].split('/')[-1]
+        #     image = cv2.imread(image_file)
+        #     yield image, intrinsics.copy(), depth_name
+        #     count += 4
