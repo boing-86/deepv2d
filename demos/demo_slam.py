@@ -10,6 +10,7 @@ import os
 import time
 import argparse
 import glob
+import tqdm
 
 from data_stream.scannet import ScanNet
 from data_stream.nyuv2 import NYUv2
@@ -67,9 +68,14 @@ def main(args):
         slam.set_session(sess)
         slam.start_visualization(args.cinematic, args.render_path, args.clear_points)
 
+        total_images = len(list(db.iterate_sequence(args.sequence)))
+        progress_bar = tqdm.tqdm(total=total_images)
+
         for (image, intrinsics, depth_map_name) in db.iterate_sequence(args.sequence):
             slam(image, intrinsics, depth_map_name)
+            progress_bar.update(1)
 
+        progress_bar.close()
 
 if __name__ == '__main__':
 
