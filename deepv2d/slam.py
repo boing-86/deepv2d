@@ -104,6 +104,9 @@ class DeepV2DSLAM:
 
 
     def _create_placeholders(self):
+        """ depth[1, height, width], pose[frames, 4, 4], instrinsics, 그래프 엣지, 그래프의 인접 행렬, 
+        인덱스, 초기화에 사용하는 boolean 등을 선언.  """
+
         frames, ht, wd = self.image_dims
         self.images_placeholder = tf.placeholder(tf.float32, [frames, ht, wd, 3])
         if self.mode == 'keyframe':
@@ -125,7 +128,7 @@ class DeepV2DSLAM:
 
         self.motion_net = MotionNetwork(self.cfg.MOTION, 
                                         mode='global',          # use global optimization mode
-                                        is_training=False)
+                                        is_training=False) # False = inference mode
         
         images = self.images_placeholder[tf.newaxis]
         depths = self.depths_placeholder[tf.newaxis]

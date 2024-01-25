@@ -9,7 +9,7 @@ from geometry.transformation import *
 from geometry.intrinsics import *
 from utils.bilinear_sampler import bilinear_sampler
 
-EPS = 1e-5
+EPSILON = 1e-5
 MIN_DEPTH = 0.1
 MAX_ERROR = 100.0
 
@@ -252,7 +252,7 @@ class MotionNetwork:
                     Ts = cond_transform(init, Gs, Ts)
 
             feats = self.extract_features(images)
-            depths = tf.gather(depths_low, ii, axis=1) + EPS
+            depths = tf.gather(depths_low, ii, axis=1) + EPSILON
 
             feats1 = tf.gather(feats, ii, axis=1)
             feats2 = tf.gather(feats, jj, axis=1)
@@ -294,6 +294,8 @@ class MotionNetwork:
                 self.intrinsics_history.append(intrinsics_matrix_to_vec(intrinsics))
 
         intrinsics = 4.0 * intrinsics_matrix_to_vec(intrinsics)
+
+        print(f"motion network :: forward {Ts}")
         return Ts, intrinsics
 
 
@@ -317,7 +319,7 @@ class MotionNetwork:
             if i > 0:
                 intrinsics_vec_to_matrix(self.intrinsics_history[i-1])
 
-            zstar = depths + EPS
+            zstar = depths + EPSILON
             flow_pred, valid_mask_pred = Tij.induced_flow(zstar, intrinsics_pred, valid_mask=True) # use predicted intrinsics
             flow_star, valid_mask_star = Gij.induced_flow(zstar, intrinsics, valid_mask=True)
             valid_mask = tf.multiply(valid_mask_pred, valid_mask_star)

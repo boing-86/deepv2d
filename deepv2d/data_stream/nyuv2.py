@@ -284,7 +284,6 @@ class NYUv2:
                 if count >= len(image_files):
                     break
                 depth_name = row[3].split('/')[-1]
-                print(depth_name)
                 image = cv2.imread(image_files[count])
                 yield image, intrinsics.copy(), depth_name
                 count += 1
