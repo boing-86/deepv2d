@@ -23,7 +23,7 @@ First create a clean virtualenv
   pip install h5py
   pip install easydict
   pip install scipy
-  pip install opencv-python
+  pip install opencv-python==4.5.5
   pip install pyyaml
   pip install toposort
   pip install vtk
